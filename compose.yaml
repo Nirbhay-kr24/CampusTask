@@ -1,0 +1,35 @@
+services:
+  db:
+    image: postgres:16-alpine
+    environment:
+      POSTGRES_DB: ${POSTGRES_DB:-campustask}
+      POSTGRES_USER: ${POSTGRES_USER:-campustask}
+      POSTGRES_PASSWORD: ${POSTGRES_PASSWORD:-local_only_change_me}
+    volumes:
+      - postgres_data:/var/lib/postgresql/data
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U $${POSTGRES_USER} -d $${POSTGRES_DB}"]
+      interval: 5s
+      timeout: 3s
+      retries: 15
+    networks: [campustask-net]
+  backend:
+    build: ./backend
+    environment:
+      DATABASE_URL: postgresql+psycopg://${POSTGRES_USER:-campustask}:${POSTGRES_PASSWORD:-local_only_change_me}@db:5432/${POSTGRES_DB:-campustask}
+      CORS_ORIGINS: http://localhost:8080,http://localhost:5173
+    depends_on:
+      db:
+        condition: service_healthy
+    ports: ["8000:8000"]
+    networks: [campustask-net]
+  frontend:
+    build: ./frontend
+    depends_on: [backend]
+    ports: ["8080:8080"]
+    networks: [campustask-net]
+volumes:
+  postgres_data:
+networks:
+  campustask-net:
+    driver: bridge
