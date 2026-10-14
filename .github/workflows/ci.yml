@@ -35,4 +35,5 @@ jobs:
       - name: Run tests
         env:
           DATABASE_URL: sqlite:///./test.db
+          PYTHONPATH: .
         run: pytest -v -p no:cacheprovider
