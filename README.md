@@ -72,3 +72,103 @@ Statuses are `todo`, `in_progress`, and `completed`.
 - [ ] M10 Docs/demo: README, evidence and live deployment update
 
 This starter is the app foundation. We'll add Kubernetes, Helm, CI/CD, AWS, and monitoring assets in separate learning milestones so each part is understandable. AWS EKS and networking can cost money; create them only when ready and destroy them after evaluation. Never commit real credentials.
+
+## Kubernetes + Helm Deployment
+
+Deploy with Helm:
+
+```bash
+helm upgrade --install campustask ./helm/campustask \
+  --namespace campustask \
+  --create-namespace
+```
+
+Verify pods are running:
+
+```bash
+kubectl get pods -n campustask
+kubectl get svc -n campustask
+helm list -n campustask
+```
+
+The Helm chart deploys backend (2 replicas), frontend (2 replicas), and
+postgres (1 replica with PVC). An Ingress resource routes `/api` to the
+backend service and `/` to the frontend service.
+
+## Terraform AWS Infrastructure
+
+Provision AWS VPC and EKS with Terraform:
+
+```bash
+cd terraform
+cp terraform.tfvars.example terraform.tfvars
+# Edit terraform.tfvars with your settings
+terraform init
+terraform plan
+terraform apply
+```
+
+This creates a VPC with two public subnets, an EKS cluster, and a managed
+worker node group. After apply, configure kubectl:
+
+```bash
+aws eks update-kubeconfig --region ap-south-1 --name campustask
+```
+
+Destroy when finished:
+
+```bash
+terraform destroy
+```
+
+## CI/CD Pipeline
+
+GitHub Actions workflow (`.github/workflows/ci.yml`) runs on push to `main`:
+
+1. **Backend Tests** — runs pytest in the backend directory
+2. **Docker Build and Trivy Scan** — builds backend and frontend images,
+   scans both with Trivy (fails on HIGH/CRITICAL CVEs)
+3. **Publish Images to GHCR** — builds and pushes images to GitHub Container
+   Registry tagged with `:latest` and the git commit SHA
+
+## Observability
+
+Prometheus scrapes the backend `/metrics` endpoint. Grafana is configured
+with Prometheus as a datasource. Deploy with:
+
+```bash
+helm upgrade --install prometheus prometheus \
+  --repo https://prometheus-community.github.io/helm-charts \
+  -f monitoring/prometheus-values.yaml \
+  --namespace monitoring \
+  --create-namespace
+
+helm upgrade --install grafana grafana \
+  --repo https://grafana.github.io/helm-charts \
+  -f monitoring/grafana-values.yaml \
+  --namespace monitoring \
+  --create-namespace
+```
+
+## Architecture
+
+```text
+Developer → Git/GitHub → GitHub Actions (pytest → Trivy → GHCR)
+                                              ↓
+                                        Terraform
+                                              ↓
+                                         AWS VPC + EKS
+                                              ↓
+                                           Helm
+                                              ↓
+                    +-----------------------+-----------------------+
+                    |                                                   |
+               Frontend (2 replicas)                            Backend (2 replicas)
+                  React + Nginx                                  FastAPI + Uvicorn
+                    |                                                   |
+                    +-----------------------+-----------------------+
+                                            |
+                                       PostgreSQL (PVC)
+                                            |
+                                    Prometheus → Grafana
+```
