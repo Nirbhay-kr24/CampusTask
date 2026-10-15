@@ -1,0 +1,30 @@
+
+images:
+  backend:
+    repository: nirbhaykr24/campustask-backend
+    tag: latest
+    pullPolicy: Always
+  frontend:
+    repository: nirbhaykr24/campustask-frontend
+    tag: latest
+    pullPolicy: Always
+
+postgres:
+  image: postgres:16-alpine
+  database: campustask
+  username: campustask
+  storage: 1Gi
+  existingSecret: campustask-db-secret
+  secretKey: POSTGRES_PASSWORD
+
+backend:
+  replicas: 2
+  port: 8000
+  corsOrigins: "http://localhost:8080"
+
+frontend:
+  replicas: 2
+  port: 8080
+  service:
+    type: NodePort
+    nodePort: 30080
