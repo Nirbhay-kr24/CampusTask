@@ -1,4 +1,4 @@
-name: DevSecOps Pipeline
+name: CampusTask DevSecOps Pipeline
 
 on:
   push:
@@ -113,6 +113,30 @@ jobs:
           load: true
           tags: campustask-frontend:ci
 
+      - name: Save backend image to artifact
+        run: |
+          mkdir -p /tmp/images
+          docker save -o /tmp/images/backend.tar campustask-backend:ci
+
+      - name: Save frontend image to artifact
+        run: |
+          mkdir -p /tmp/images
+          docker save -o /tmp/images/frontend.tar campustask-frontend:ci
+
+      - name: Upload backend image artifact
+        uses: actions/upload-artifact@v4
+        with:
+          name: backend-image
+          path: /tmp/images/backend.tar
+          retention-days: 1
+
+      - name: Upload frontend image artifact
+        uses: actions/upload-artifact@v4
+        with:
+          name: frontend-image
+          path: /tmp/images/frontend.tar
+          retention-days: 1
+
   # 5. Image Scan - Trivy
   image-scan:
     name: Image Scan - Trivy
@@ -121,6 +145,24 @@ jobs:
     steps:
       - name: Checkout repository
         uses: actions/checkout@v4
+
+      - name: Download backend image artifact
+        uses: actions/download-artifact@v4
+        with:
+          name: backend-image
+          path: /tmp/images
+
+      - name: Download frontend image artifact
+        uses: actions/download-artifact@v4
+        with:
+          name: frontend-image
+          path: /tmp/images
+
+      - name: Load backend image
+        run: docker load -i /tmp/images/backend.tar
+
+      - name: Load frontend image
+        run: docker load -i /tmp/images/frontend.tar
 
       - name: Scan backend image with Trivy
         uses: aquasecurity/trivy-action@v0.36.0
