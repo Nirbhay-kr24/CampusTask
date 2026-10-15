@@ -1,0 +1,11 @@
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: campustask-config
+  namespace: campustask
+data:
+  POSTGRES_DB: campustask
+  POSTGRES_USER: campustask
+  DATABASE_HOST: postgres
+  DATABASE_PORT: "5432"
+  CORS_ORIGINS: "http://localhost:8080"
