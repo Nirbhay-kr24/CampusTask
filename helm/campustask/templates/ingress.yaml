@@ -20,7 +20,7 @@ spec:
                 port:
                   number: {{ .Values.backend.port }}
           - path: /api(/.*)*
-            pathType: Prefix
+            pathType: ImplementationSpecific
             backend:
               service:
                 name: backend
