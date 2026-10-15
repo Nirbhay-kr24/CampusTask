@@ -20,4 +20,8 @@ terraform.tfvars
 .coverage
 htmlcov/
 
+# Download artifacts
+wget-log
+wget-log.*
+
 
