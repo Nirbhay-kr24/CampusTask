@@ -79,6 +79,7 @@ jobs:
         with:
           context: ./backend
           load: true
+          no-cache: true
           tags: campustask-backend:ci
 
       - name: Build frontend image
@@ -86,6 +87,7 @@ jobs:
         with:
           context: ./frontend
           load: true
+          no-cache: true
           tags: campustask-frontend:ci
 
       - name: Save backend image to artifact
@@ -111,6 +113,28 @@ jobs:
           name: frontend-image
           path: /tmp/images/frontend.tar
           retention-days: 1
+
+      - name: Verify Starlette version in backend image
+        run: |
+            docker run --rm campustask-backend:ci python - <<'PY'
+            try:
+                import starlette
+                print("backend starlette==" + starlette.__version__)
+            except Exception as e:
+                print("backend starlette not installed:", e)
+            PY
+
+      - name: Verify Starlette version in frontend image
+        run: |
+            docker run --rm --entrypoint python campustask-frontend:ci - <<'PY' || echo "frontend: python or starlette not present"
+            try:
+                import starlette
+                print("frontend starlette==" + starlette.__version__)
+            except Exception as e:
+                print("frontend starlette not installed:", e)
+            PY     
+
+          
 
   # 4. Image Scan - Trivy
   image-scan:
