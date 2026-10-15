@@ -32,6 +32,8 @@ jobs:
         run: pip install -r requirements.txt
 
       - name: Run backend tests
+        env:
+          PYTHONPATH: ${{ github.workspace }}/backend
         run: pytest -v -p no:cacheprovider
 
   # 2. SAST - CodeQL
