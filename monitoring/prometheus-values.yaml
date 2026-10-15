@@ -1,0 +1,15 @@
+
+server:
+  persistentVolume:
+    enabled: false
+
+  global:
+    scrape_interval: 15s
+
+extraScrapeConfigs: |
+  - job_name: "campustask-backend"
+    metrics_path: /metrics
+    static_configs:
+      - targets:
+          - "backend.campustask.svc.cluster.local:8000"
+
