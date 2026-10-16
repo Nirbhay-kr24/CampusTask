@@ -18,8 +18,6 @@ CampusTask is a DevOps capstone project: a full-stack task management applicatio
 - [Observability (Prometheus + Grafana)](#observability-prometheus--grafana)
 - [API Reference](#api-reference)
 - [Known Issues & Limitations](#known-issues--limitations)
-- [License](#license)
-
 ---
 
 ## Project Overview
@@ -329,10 +327,10 @@ Swagger UI: `http://localhost:8000/docs` (local) or `/docs` on the deployed back
 - **Local Docker Compose** uses a default password (`local_only_change_me`) — change it for any non-local environment.
 - **Terraform EKS** provisions real AWS resources that incur cost; run `terraform destroy` after evaluation.
 - **Ingress** requires the nginx ingress controller to be installed in the cluster (enabled by default on Minikube via `minikube addons enable ingress`).
-- **Prometheus/Grafana** are not installed by the CampusTask Helm chart; deploy them separately using the `monitoring/` values files.
 
 ---
 
-## License
+## Capstone Submission
 
-MIT
+See [SUBMISSION.md](SUBMISSION.md) for rubric-wise screenshots
+and evidence for modules M1–M10.
