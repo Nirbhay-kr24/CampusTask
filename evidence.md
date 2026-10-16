@@ -290,7 +290,7 @@ The final project presentation is available in the `demo/` directory.
 
 ### Project Documentation
 
-- `SUBMISSION.md` — Capstone submission evidence organized by module.
+- `evidence.md` — Capstone submission evidence organized by module.
 
 These files provide supporting documentation and presentation material for the CampusTask capstone project.
 
