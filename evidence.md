@@ -87,6 +87,21 @@ The terminal output shows **31 commits** on `origin/main`.
 
 ## M4 - Docker and Dependency Verification
 
+### Docker build
+`docker compose up --build` starts all three services (frontend, backend, postgres)
+
+<img width="1566" height="917" alt="image" src="https://github.com/user-attachments/assets/94e65b23-2f2c-49a3-b3f8-5dda4c1dc209" />
+
+### Frontend Dockerfile
+`frontend/Dockerfile` uses multi-stage build (Node build + Nginx runtime)
+
+<img width="1558" height="681" alt="image" src="https://github.com/user-attachments/assets/91dbd504-1302-4b8a-b753-90e3e279629b" />
+
+### Backend Dockerfile
+
+<img width="1542" height="631" alt="image" src="https://github.com/user-attachments/assets/bd383b20-004c-4549-9c53-aaae2bad5925" />
+
+
 ### Starlette Version Check
 
 Shows the Starlette version inside the backend container.
