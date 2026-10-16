@@ -105,46 +105,72 @@ GitHub Actions
 
 ```text
 CampusTask/
-├── backend/                 # FastAPI application
-│   ├── app/                 # API routes, models, schemas, DB config
-│   ├── migrations/          # Alembic migration versions
-│   ├── tests/               # Pytest test suite
-│   ├── Dockerfile           # Backend image (non-root user)
-│   ├── requirements.txt
+├── .github/
+│   └── workflows/
+│       └── devsecops.yml
+├── backend/
+│   ├── app/
+│   │   ├── __init__.py
+│   │   ├── database.py
+│   │   ├── main.py
+│   │   ├── models.py
+│   │   └── schemas.py
+│   ├── migrations/
+│   │   ├── versions/
+│   │   ├── env.py
+│   │   └── script.py.mako
+│   ├── tests/
+│   ├── .dockerignore
 │   ├── alembic.ini
-│   └── .dockerignore
-├── frontend/                # React + Vite application
-│   ├── src/
-│   ├── Dockerfile           # Multi-stage: Node build + Nginx runtime
-│   ├── nginx.conf
-│   └── .dockerignore
-├── k8s/                     # Kubernetes bootstrap manifests
-│   ├── namespace.yaml
+│   ├── Dockerfile
+│   └── requirements.txt
+├── frontend/
+├── helm/
+│   └── campustask/
+│       ├── templates/
+│       │   ├── backend.yaml
+│       │   ├── frontend.yaml
+│       │   ├── ingress.yaml
+│       │   └── postgres.yaml
+│       ├── Chart.yaml
+│       └── values.yaml
+├── k8s/
 │   ├── backend.yaml
+│   ├── configmap.yaml
 │   ├── frontend.yaml
-│   ├── postgres.yaml
-│   └── configmap.yaml
-├── helm/campustask/         # Helm chart
-│   ├── Chart.yaml
-│   ├── values.yaml
-│   └── templates/
-│       ├── backend.yaml
-│       ├── frontend.yaml
-│       ├── postgres.yaml
-│       └── ingress.yaml
-├── monitoring/              # Prometheus + Grafana values
-│   ├── prometheus-values.yaml
-│   └── grafana-values.yaml
-├── terraform/               # AWS VPC + EKS infrastructure
+│   ├── namespace.yaml
+│   └── postgres.yaml
+├── monitoring/
+│   ├── campustask-servicemonitor.yaml
+│   ├── grafana-values.yaml
+│   └── prometheus-values.yaml
+├── terraform/
 │   ├── main.tf
-│   └── terraform.tfvars.example
-├── docker-compose.yml       # Local full stack
-├── .github/workflows/ci.yml # GitHub Actions CI/CD
+│   ├── terraform.tfvars.example
+│   ├── terraform.tfstate
+│   ├── terraform.tfstate.backup
+│   ├── terraform.tfstate.lock.info
+│   ├── terraform.lock.hcl
+│   └── values.yaml
 ├── .gitignore
-└── README.md
+├── .trivyignore
+├── compose.yaml
+├── README.md
+├── CampusTask.md
+└── SUBMISSION.md
 ```
 
----
+### Key Components
+
+- **Backend:** FastAPI application, database models, schemas, migrations, and automated tests.
+- **Frontend:** User interface for managing student assignments and tracking progress.
+- **Docker Compose:** Runs the application services locally.
+- **Kubernetes:** Deployment and configuration manifests.
+- **Helm:** Packages the application resources for Kubernetes deployments.
+- **Terraform:** Defines AWS infrastructure as code.
+- **Monitoring:** Prometheus metrics collection and Grafana dashboards.
+- **GitHub Actions:** Automates testing, security analysis, container builds, image scanning, and publishing.
+
 
 ## Local Setup (Docker Compose)
 
