@@ -1,6 +1,6 @@
 # CampusTask — Student Assignment & Project Tracker
 
-CampusTask is a DevOps capstone project: a full-stack task management application with a React + Vite frontend, FastAPI backend, PostgreSQL database, SQLAlchemy ORM, Alembic migrations, and Pytest tests. It is containerized with Docker, deployed to Kubernetes via Helm, and provisioned on AWS with Terraform. GitHub Actions runs CI/CD (pytest → Trivy scan → GHCR publish), and Prometheus/Grafana provide observability.
+CampusTask is a DevOps capstone project: a full-stack task management application with a React + Vite frontend, FastAPI backend, PostgreSQL database, SQLAlchemy ORM, Alembic migrations, and Pytest tests. It is containerized with Docker, deployed to Kubernetes via Helm, and provisioned on AWS with Terraform. GitHub Actions runs CI/CD checks for tests, code analysis, Docker builds, Trivy image scanning, and image publishing, and Prometheus/Grafana provide observability.
 
 ---
 
@@ -18,6 +18,8 @@ CampusTask is a DevOps capstone project: a full-stack task management applicatio
 - [Observability (Prometheus + Grafana)](#observability-prometheus--grafana)
 - [API Reference](#api-reference)
 - [Known Issues & Limitations](#known-issues--limitations)
+- [Evidence](#evidence)
+- [Presentation](#presentation)
 ---
 
 ## Project Overview
@@ -48,7 +50,7 @@ GitHub Actions
    |-- frontend build
    |-- Docker build (backend + frontend)
    |-- Trivy scan (fails on HIGH/CRITICAL)
-   `-- push images to GHCR (:latest + git SHA)
+   `-- publish container images to the configured registry
               |
               v
         Terraform
@@ -90,7 +92,7 @@ GitHub Actions
 | ORM / Migrations | SQLAlchemy 2.0, Alembic |
 | Testing | Pytest 8, HTTPX |
 | Containerization | Docker, Docker Compose |
-| Registry | GitHub Container Registry (GHCR) |
+| Registry | Docker Hub / configured container registry |
 | CI/CD | GitHub Actions |
 | Security | Trivy (container scanning) |
 | Infrastructure | Terraform (AWS VPC + EKS) |
@@ -147,17 +149,17 @@ CampusTask/
 ├── terraform/
 │   ├── main.tf
 │   ├── terraform.tfvars.example
-│   ├── terraform.tfstate
-│   ├── terraform.tfstate.backup
-│   ├── terraform.tfstate.lock.info
-│   ├── terraform.lock.hcl
-│   └── values.yaml
+│   ├── .terraform.lock.hcl
+│   ├── main.tf
+│   └── terraform.tfvars.example
 ├── .gitignore
 ├── .trivyignore
 ├── compose.yaml
 ├── README.md
-├── CampusTask.md
-└── SUBMISSION.md
+├── README.md
+├── evidence.md
+└── demo/
+    └── slides.pdf
 ```
 
 ### Key Components
@@ -226,15 +228,15 @@ Tests use an isolated in-memory SQLite database (not the production database). T
 
 ## CI/CD Pipeline
 
-The GitHub Actions workflow (`.github/workflows/ci.yml`) runs on every push to `main` and on pull requests:
+The GitHub Actions workflow (`.github/workflows/devsecops.yml`) runs on every push to `main` and on pull requests:
 
 1. **Backend Tests** — installs Python dependencies and runs `pytest`; fails the build on test failure
 2. **Docker Build and Trivy Scan** — builds backend and frontend images; scans both with Trivy and fails on HIGH or CRITICAL CVEs
-3. **Publish Images to GHCR** — on push to `main`, builds and pushes backend and frontend images to GitHub Container Registry, tagged with `:latest` and the git commit SHA (`${{ github.sha }}`) for traceability
+3. **Publish Images** — the workflow publishes the built backend and frontend images to the configured container registry when its publishing conditions are met.
 
-Images are pushed to `ghcr.io/<owner>/campustask-backend` and `ghcr.io/<owner>/campustask-frontend`.
+The Docker Hub evidence shows repositories named `campustask-backend` and `campustask-frontend`. Confirm the exact image tags and registry settings in `.github/workflows/devsecops.yml` before documenting them more specifically.
 
-No secrets are committed to the repository; the workflow uses `secrets.GITHUB_TOKEN` for GHCR authentication.
+Never commit access keys, tokens, or other secrets to the repository.
 
 ---
 
@@ -297,7 +299,7 @@ Destroy when finished (to avoid runaway AWS costs):
 terraform destroy
 ```
 
-`terraform.tfvars.example` is provided without real credentials. Never commit AWS access keys or secrets to GitHub.
+`terraform.tfvars.example` is provided without real credentials. Never commit AWS access keys, secrets, Terraform state files, plan files, or the `.terraform/` working directory to GitHub. Keep only the source configuration and safe example variables in version control.
 
 ---
 
@@ -356,7 +358,16 @@ Swagger UI: `http://localhost:8000/docs` (local) or `/docs` on the deployed back
 
 ---
 
-## Capstone Submission
+## Evidence
 
-See [SUBMISSION.md](SUBMISSION.md) for rubric-wise screenshots
-and evidence for modules M1–M10.
+See [evidence.md](evidence.md) for milestone-wise screenshots and supporting evidence for modules M1–M10.
+
+---
+
+## Presentation
+
+The final presentation is available as a PDF for convenient browser viewing:
+
+[View CampusTask presentation](demo/slides.pdf)
+
+The presentation covers the project overview, technology stack, architecture, CI/CD pipeline, infrastructure, Kubernetes deployment, observability, validation results, and key learnings.
