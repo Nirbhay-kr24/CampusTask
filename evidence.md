@@ -1,76 +1,35 @@
 # CampusTask - Capstone Submission
 
-This document presents evidence for the CampusTask capstone project, organized by module.
+This document summarizes the implementation milestones, validation results, and supporting screenshots for the CampusTask DevOps capstone.
+
+## Milestone Completion Summary
+
+| Milestone | Area | Evidence |
+|---|---|---|
+| M1 | Application Development | Frontend dashboard and backend API |
+| M2 | Automated Testing | Pytest results — 9 tests passed |
+| M3 | Containerization | Docker images and Docker Compose setup |
+| M4 | CI/CD Pipeline | Successful GitHub Actions workflow |
+| M5 | Security Scanning | CodeQL and Trivy workflow checks |
+| M6 | Kubernetes Deployment | Running pods, services, and ingress configuration |
+| M7 | Infrastructure as Code | Terraform initialization, plan, and apply |
+| M8 | Observability | Prometheus metrics and Grafana dashboard |
+| M9 | Infrastructure Cleanup | Terraform destroy completed for 15 resources |
+| M10 | Final Documentation | Project README, this evidence document, and presentation |
+
+## Key Validation Results
+
+- **Automated tests:** 9 tests passed.
+- **CI/CD:** Successful workflow run with the configured jobs completed.
+- **API:** Health, readiness, Swagger documentation, and metrics endpoints tested.
+- **Kubernetes:** Application workloads and ingress resources inspected.
+- **Observability:** Prometheus metrics and Grafana dashboards verified.
+- **Terraform:** Infrastructure provisioning and teardown demonstrated.
+
 
 ## Repository Structure
 
-```text
-CampusTask/
-├── .github/
-│   └── workflows/
-│       └── devsecops.yml
-├── backend/
-│   ├── app/
-│   │   ├── __init__.py
-│   │   ├── database.py
-│   │   ├── main.py
-│   │   ├── models.py
-│   │   └── schemas.py
-│   ├── migrations/
-│   │   ├── versions/
-│   │   ├── env.py
-│   │   └── script.py.mako
-│   ├── tests/
-│   ├── .dockerignore
-│   ├── alembic.ini
-│   ├── Dockerfile
-│   └── requirements.txt
-├── frontend/
-├── helm/
-│   └── campustask/
-│       ├── templates/
-│       │   ├── backend.yaml
-│       │   ├── frontend.yaml
-│       │   ├── ingress.yaml
-│       │   └── postgres.yaml
-│       ├── Chart.yaml
-│       └── values.yaml
-├── k8s/
-│   ├── backend.yaml
-│   ├── configmap.yaml
-│   ├── frontend.yaml
-│   ├── namespace.yaml
-│   └── postgres.yaml
-├── monitoring/
-│   ├── campustask-servicemonitor.yaml
-│   ├── grafana-values.yaml
-│   └── prometheus-values.yaml
-├── terraform/
-│   ├── main.tf
-│   ├── terraform.tfvars.example
-│   ├── terraform.tfstate
-│   ├── terraform.tfstate.backup
-│   ├── terraform.tfstate.lock.info
-│   ├── terraform.lock.hcl
-│   └── values.yaml
-├── .gitignore
-├── .trivyignore
-├── compose.yaml
-├── README.md
-├── CampusTask.md
-└── SUBMISSION.md
-```
-
-### Key Components
-
-- **Backend:** FastAPI application, database models, schemas, migrations, and automated tests.
-- **Frontend:** User interface for managing student assignments and tracking progress.
-- **Docker Compose:** Runs the application services locally.
-- **Kubernetes:** Deployment and configuration manifests.
-- **Helm:** Packages the application resources for Kubernetes deployments.
-- **Terraform:** Defines AWS infrastructure as code.
-- **Monitoring:** Prometheus metrics collection and Grafana dashboards.
-- **GitHub Actions:** Automates testing, security analysis, container builds, image scanning, and publishing.
+<img width="1431" height="857" alt="image" src="https://github.com/user-attachments/assets/90fa5d24-43ed-4768-a860-1baaf704496e" />
 
 
 ## M1 - Application and API
@@ -287,10 +246,4 @@ The backend targets are shown as **UP**.
 The final project presentation is available in the `demo/` directory.
 
 - `demo/` — Contains the project presentation and demo material.
-
-### Project Documentation
-
-- `evidence.md` — Capstone submission evidence organized by module.
-
-These files provide supporting documentation and presentation material for the CampusTask capstone project.
 
