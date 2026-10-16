@@ -5,9 +5,10 @@ RUN npm install
 COPY . .
 RUN npm run build
 
-FROM nginx:1.27-alpine
+FROM nginx:stable-alpine
 
-RUN addgroup -S web && adduser -S web -G web \
+RUN apk upgrade --no-cache \
+    && addgroup -S web && adduser -S web -G web \
     && mkdir -p /var/cache/nginx /var/run /var/log/nginx /tmp/nginx \
     && chown -R web:web /var/cache/nginx /var/run /var/log/nginx /usr/share/nginx/html /tmp/nginx
 

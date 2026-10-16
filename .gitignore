@@ -16,6 +16,17 @@ dist/
 *.tfstate.*
 terraform.tfvars
 
+# Terraform
+**/.terraform/*
+*.tfstate
+*.tfstate.*
+*.tfplan
+crash.log
+
+# Terraform variable files containing secrets
+*.tfvars
+!terraform.tfvars.example
+
 # Local test artifacts
 .coverage
 htmlcov/
